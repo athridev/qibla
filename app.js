@@ -65,9 +65,9 @@ function nearLongitude(p,ref){const out=[...p];while(out[1]-ref>180)out[1]-=360;
 
 function clearRoute(){for(const l of [qiblaLine,qiblaHalo,arrowPin,...routeArrows])if(l&&map)map.removeLayer(l);qiblaLine=qiblaHalo=arrowPin=null;routeArrows=[];}
 function drawQibla(){
-  if(!map)return;clearRoute();if(!spot||stage===1)return;
-  const q=Geo.qibla(spot);if(!q.usable)return;const key=spot.join(',');
-  if(key!==routeKey){routeCache=Geo.route(spot);routeKey=key;}
+  if(!map)return;clearRoute();const origin=stage===1?pendingSpot:spot;if(!origin)return;
+  const q=Geo.qibla(origin);if(!q.usable)return;const key=origin.join(',');
+  if(key!==routeKey){routeCache=Geo.route(origin);routeKey=key;}
   const path=routeCache;
   qiblaHalo=L.polyline(path,{color:'#ffffff',weight:9,opacity:.9,smoothFactor:0,interactive:false}).addTo(map);
   qiblaLine=L.polyline(path,{color:'#098158',weight:5,opacity:1,smoothFactor:0,interactive:false}).addTo(map);
@@ -125,6 +125,7 @@ function previewPosition(p,acc=null,name='',pan=true){
     candidatePin.on('dragstart',stopGPS);candidatePin.on('dragend',()=>{const c=candidatePin.getLatLng();previewPosition([c.lat,wrap(c.lng)],null,t('manualPreview'));});
     if(acc!==null)candidateCircle=L.circle(p,{radius:acc,color:'#ad8137',weight:1,fillOpacity:.1,interactive:false}).addTo(map);
     if(!pan){const c=map.getCenter();if(Geo.distance([c.lat,wrap(c.lng)],p)>1)map.panTo(p);}
+    drawQibla();
   }
   render();message(acc!==null?'gpsReady':'previewSpot',acc!==null?{n:number(acc)}:{});
 }
