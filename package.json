@@ -1,0 +1,10 @@
+{
+  "name": "qibla-map",
+  "version": "1.0.0",
+  "private": false,
+  "description": "A map-based Qibla finder using a visible landmark instead of a magnetic compass.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "python3 -m http.server 4173"
+  }
+}
